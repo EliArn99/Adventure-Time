@@ -7,3 +7,32 @@ def adventure_game():
             "text": "\nYou find yourself in a dark forest. 🌲🌌\nTwo paths lie ahead: left or right.\n",
             "choices": {"left": "cabin", "right": "river"}
         },
+        "cabin": {
+            "text": "\nYou approach a spooky cabin. 🏚️\nDo you enter or leave?\n",
+            "choices": {"enter": "inside_cabin", "leave": "start"}
+        },
+        "river": {
+            "text": "\nYou stand by a rushing river. 🌊\nDo you swim across or follow the bank?\n",
+            "choices": {"swim": "waterfall", "follow": "bridge"}
+        },
+        "inside_cabin": {
+            "text": "\nThe cabin is dark and eerie. 🕯️\nYou find a locked chest and a mysterious key.\nDo you open the chest or leave?\n",
+            "choices": {"open": "treasure", "leave": "start"}
+        },
+        "treasure": {
+            "text": "\n🎉 You found a chest of gold and magical artifacts! 💰✨\nYou win! 🎯\n",
+            "choices": {}
+        },
+        "waterfall": {
+            "text": "\nThe river's current is too strong! You are swept away... 💦\nGame Over.\n",
+            "choices": {}
+        },
+        "bridge": {
+            "text": "\nYou find a rickety bridge and cross it carefully. 🌉\nOn the other side, a wise sage offers you a riddle:\n\n'What has roots as nobody sees,\nIs taller than trees,\nUp, up it goes,\nAnd yet never grows?'\n",
+            "choices": {"mountain": "village", "tree": "waterfall"}
+        },
+        "village": {
+            "text": "\nThe sage nods and lets you pass. You enter a bustling village. 🏘️\nThe villagers cheer - you are their hero! 🎆\nYou win!\n",
+            "choices": {}
+        }
+    }
