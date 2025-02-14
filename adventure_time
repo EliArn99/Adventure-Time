@@ -1,1 +1,9 @@
+import random
 
+
+def adventure_game():
+    story = {
+        "start": {
+            "text": "\nYou find yourself in a dark forest. 🌲🌌\nTwo paths lie ahead: left or right.\n",
+            "choices": {"left": "cabin", "right": "river"}
+        },
