@@ -1,6 +1,5 @@
 import random
 
-
 def adventure_game():
     story = {
         "start": {
@@ -34,5 +33,48 @@ def adventure_game():
         "village": {
             "text": "\nThe sage nods and lets you pass. You enter a bustling village. 🏘️\nThe villagers cheer - you are their hero! 🎆\nYou win!\n",
             "choices": {}
+        },
+        "mysterious_cave": {
+            "text": "\nYou stumble upon a mysterious cave entrance. 🕳️\nDo you enter the cave or walk past it?\n",
+            "choices": {"enter": "cave_inside", "walk past": "river"}
+        },
+        "cave_inside": {
+            "text": "\nThe cave is filled with glowing crystals and an ancient dragon. 🐉\nThe dragon speaks: 'Answer my riddle to pass or be turned to stone.'\n\n'What comes once in a minute, twice in a moment, but never in a thousand years?'\n",
+            "choices": {"m": "hidden_treasure", "time": "waterfall"}
+        },
+        "hidden_treasure": {
+            "text": "\nThe dragon smiles and reveals a hidden treasure of enchanted artifacts! 🪙✨\nYou win! 🎯\n",
+            "choices": {}
         }
     }
+
+    inventory = []
+    current_location = "start"
+
+    while True:
+        location = story[current_location]
+        print(location["text"])
+
+        if not location["choices"]:
+            break
+
+        choice = input(f"Choose one: {', '.join(location['choices'].keys())}: ").strip().lower()
+
+        if choice in location["choices"]:
+            current_location = location["choices"][choice]
+
+            if current_location == "inside_cabin":
+                print("\n🗝️ You found a key!")
+                inventory.append("key")
+
+            if current_location == "treasure" and "key" not in inventory:
+                print("\nThe chest is locked! You need a key. 🔒")
+                current_location = "inside_cabin"
+
+        else:
+            print("\n❌ Invalid choice. Try again.")
+
+if __name__ == "__main__":
+    adventure_game()
+
+
