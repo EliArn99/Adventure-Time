@@ -1,80 +1,57 @@
 import random
 
-def adventure_game():
-    story = {
-        "start": {
-            "text": "\nYou find yourself in a dark forest. 🌲🌌\nTwo paths lie ahead: left or right.\n",
-            "choices": {"left": "cabin", "right": "river"}
-        },
-        "cabin": {
-            "text": "\nYou approach a spooky cabin. 🏚️\nDo you enter or leave?\n",
-            "choices": {"enter": "inside_cabin", "leave": "start"}
-        },
-        "river": {
-            "text": "\nYou stand by a rushing river. 🌊\nDo you swim across or follow the bank?\n",
-            "choices": {"swim": "waterfall", "follow": "bridge"}
-        },
-        "inside_cabin": {
-            "text": "\nThe cabin is dark and eerie. 🕯️\nYou find a locked chest and a mysterious key.\nDo you open the chest or leave?\n",
-            "choices": {"open": "treasure", "leave": "start"}
-        },
-        "treasure": {
-            "text": "\n🎉 You found a chest of gold and magical artifacts! 💰✨\nYou win! 🎯\n",
-            "choices": {}
-        },
-        "waterfall": {
-            "text": "\nThe river's current is too strong! You are swept away... 💦\nGame Over.\n",
-            "choices": {}
-        },
-        "bridge": {
-            "text": "\nYou find a rickety bridge and cross it carefully. 🌉\nOn the other side, a wise sage offers you a riddle:\n\n'What has roots as nobody sees,\nIs taller than trees,\nUp, up it goes,\nAnd yet never grows?'\n",
-            "choices": {"mountain": "village", "tree": "waterfall"}
-        },
-        "village": {
-            "text": "\nThe sage nods and lets you pass. You enter a bustling village. 🏘️\nThe villagers cheer - you are their hero! 🎆\nYou win!\n",
-            "choices": {}
-        },
-        "mysterious_cave": {
-            "text": "\nYou stumble upon a mysterious cave entrance. 🕳️\nDo you enter the cave or walk past it?\n",
-            "choices": {"enter": "cave_inside", "walk past": "river"}
-        },
-        "cave_inside": {
-            "text": "\nThe cave is filled with glowing crystals and an ancient dragon. 🐉\nThe dragon speaks: 'Answer my riddle to pass or be turned to stone.'\n\n'What comes once in a minute, twice in a moment, but never in a thousand years?'\n",
-            "choices": {"m": "hidden_treasure", "time": "waterfall"}
-        },
-        "hidden_treasure": {
-            "text": "\nThe dragon smiles and reveals a hidden treasure of enchanted artifacts! 🪙✨\nYou win! 🎯\n",
-            "choices": {}
+class StoryNode:
+    def __init__(self, text, choices=None):
+        self.text = text
+        self.choices = choices if choices else {}
+
+    def display(self):
+        print(self.text)
+
+class AdventureGame:
+    def __init__(self):
+        self.story = self.create_story()
+        self.inventory = []
+        self.current_location = "start"
+
+    def create_story(self):
+        return {
+            "start": StoryNode("\nYou find yourself in a dark forest. 🌲🌌\nTwo paths lie ahead: left or right.\n", {"left": "cabin", "right": "river"}),
+            "cabin": StoryNode("\nYou approach a spooky cabin. 🏚️\nDo you enter or leave?\n", {"enter": "inside_cabin", "leave": "start"}),
+            "river": StoryNode("\nYou stand by a rushing river. 🌊\nDo you swim across or follow the bank?\n", {"swim": "waterfall", "follow": "bridge"}),
+            "inside_cabin": StoryNode("\nThe cabin is dark and eerie. 🕯️\nYou find a locked chest and a mysterious key.\nDo you open the chest or leave?\n", {"open": "treasure", "leave": "start"}),
+            "treasure": StoryNode("\n🎉 You found a chest of gold and magical artifacts! 💰✨\nYou win! 🎯\n"),
+            "waterfall": StoryNode("\nThe river's current is too strong! You are swept away... 💦\nGame Over.\n"),
+            "bridge": StoryNode("\nYou find a rickety bridge and cross it carefully. 🌉\nOn the other side, a wise sage offers you a riddle:\n\n'What has roots as nobody sees,\nIs taller than trees,\nUp, up it goes,\nAnd yet never grows?'\n", {"mountain": "village", "tree": "waterfall"}),
+            "village": StoryNode("\nThe sage nods and lets you pass. You enter a bustling village. 🏘️\nThe villagers cheer - you are their hero! 🎆\nYou win!\n"),
+            "mysterious_cave": StoryNode("\nYou stumble upon a mysterious cave entrance. 🕳️\nDo you enter the cave or walk past it?\n", {"enter": "cave_inside", "walk past": "river"}),
+            "cave_inside": StoryNode("\nThe cave is filled with glowing crystals and an ancient dragon. 🐉\nThe dragon speaks: 'Answer my riddle to pass or be turned to stone.'\n\n'What comes once in a minute, twice in a moment, but never in a thousand years?'\n", {"m": "hidden_treasure", "time": "waterfall"}),
+            "hidden_treasure": StoryNode("\nThe dragon smiles and reveals a hidden treasure of enchanted artifacts! 🪙✨\nYou win! 🎯\n")
         }
-    }
 
-    inventory = []
-    current_location = "start"
+    def play(self):
+        while True:
+            location = self.story[self.current_location]
+            location.display()
 
-    while True:
-        location = story[current_location]
-        print(location["text"])
+            if not location.choices:
+                break
 
-        if not location["choices"]:
-            break
+            choice = input(f"Choose one: {', '.join(location.choices.keys())}: ").strip().lower()
 
-        choice = input(f"Choose one: {', '.join(location['choices'].keys())}: ").strip().lower()
+            if choice in location.choices:
+                self.current_location = location.choices[choice]
 
-        if choice in location["choices"]:
-            current_location = location["choices"][choice]
+                if self.current_location == "inside_cabin" and "key" not in self.inventory:
+                    print("\n🗝️ You found a key!")
+                    self.inventory.append("key")
 
-            if current_location == "inside_cabin":
-                print("\n🗝️ You found a key!")
-                inventory.append("key")
-
-            if current_location == "treasure" and "key" not in inventory:
-                print("\nThe chest is locked! You need a key. 🔒")
-                current_location = "inside_cabin"
-
-        else:
-            print("\n❌ Invalid choice. Try again.")
+                if self.current_location == "treasure" and "key" not in self.inventory:
+                    print("\nThe chest is locked! You need a key. 🔒")
+                    self.current_location = "inside_cabin"
+            else:
+                print("\n❌ Invalid choice. Try again.")
 
 if __name__ == "__main__":
-    adventure_game()
-
-
+    game = AdventureGame()
+    game.play()
